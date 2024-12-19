@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "VidForge",
   description: "Generate your video using AI",
   icons: {
-    icon: "/icons/logo.svg",
+    icon: "/logo.svg",
   },
 };
 
