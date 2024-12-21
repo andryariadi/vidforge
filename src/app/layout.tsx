@@ -3,6 +3,7 @@ import { Manrope } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { ClerkProvider } from "@clerk/nextjs";
+import Provider from "@/components/Provider";
 
 const manrope = Manrope({ subsets: ["latin"] });
 
@@ -38,7 +39,7 @@ export default function RootLayout({
     >
       <html lang="en">
         <body className={`${manrope.className} antialiased text-white-1`}>
-          {children}
+          <Provider>{children}</Provider>
           <Toaster position="top-right" />
         </body>
       </html>
