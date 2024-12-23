@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { ClerkProvider } from "@clerk/nextjs";
 import Provider from "@/components/Provider";
 
-const manrope = Manrope({ subsets: ["latin"] });
+const outfit = Outfit({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "VidForge",
@@ -38,7 +38,7 @@ export default function RootLayout({
       }}
     >
       <html lang="en">
-        <body className={`${manrope.className} antialiased text-white-1`}>
+        <body className={`${outfit.className} antialiased text-white-1`}>
           <Provider>{children}</Provider>
           <Toaster position="top-right" />
         </body>

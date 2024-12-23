@@ -12,34 +12,29 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
   const { user } = useUser();
 
   useEffect(() => {
+    const isNewUser = async (email: string) => {
+      try {
+        const res = await db.select().from(Users).where(eq(Users.email, email));
+
+        if (!res[0]) {
+          await db.insert(Users).values({
+            name: user?.fullName as string,
+            email: email,
+          });
+        } else {
+          toast.success(`Welcome back ${user?.fullName}`, { style: toastStyle });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     if (user?.primaryEmailAddress?.emailAddress) {
       isNewUser(user.primaryEmailAddress.emailAddress);
     }
   }, [user]);
 
-  const isNewUser = async (email: string) => {
-    try {
-      const res = await db.select().from(Users).where(eq(Users.email, email));
-
-      if (!res[0]) {
-        await db.insert(Users).values({
-          name: user?.fullName as string,
-          email: email,
-          imageUrl: user?.imageUrl,
-        });
-      } else {
-        toast.success("Welcome back " + user?.fullName, { style: toastStyle });
-      }
-
-      console.log({ res }, "<---diprovider2");
-    } catch (error) {
-      console.error(error, "<---diisNewUser error");
-    }
-  };
-
-  console.log({ user }, "<---diprovider");
-
-  return <div>{children}</div>;
+  return <>{children}</>;
 };
 
 export default Provider;
