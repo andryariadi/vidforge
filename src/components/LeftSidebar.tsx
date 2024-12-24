@@ -11,8 +11,8 @@ const LeftSidebar = () => {
   console.log(pathname, "<---dileftsidebar");
 
   return (
-    <section className="bg-rose-700 w-full max-w-[15rem] left_sidebar">
-      <aside className="bg-violet-700 text-gray-400/90">
+    <section className="bg-rose-700 w-full max-w-[18rem] left_sidebar">
+      <aside className="bg-violet-700">
         {sidebarLinks.map((item) => {
           const isActive = pathname === item.route || pathname.startsWith(`${item.route}/`);
           return (
