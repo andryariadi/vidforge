@@ -14,6 +14,8 @@ import TextareaField from "./TextareaField";
 
 const CreateVideoForm = () => {
   const [topic, setTopic] = useState<string>();
+  const [topicPrompt, setTopicPrompt] = useState<string>("");
+
   const [duration, setDuration] = useState<string>();
 
   const handleTopicChange = (topic?: string) => {
@@ -27,19 +29,27 @@ const CreateVideoForm = () => {
   };
 
   const {
-    register,
+    // register,
     setValue,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<z.infer<typeof videoSchema>>({
     resolver: zodResolver(videoSchema),
+    // defaultValues: {
+    //   topic: "",
+    //   duration: "",
+    // },
   });
 
   const handleSubmitForm: SubmitHandler<z.infer<typeof videoSchema>> = (data) => {
+    if (data.topic === "Custom Prompt") {
+      data.topic = topicPrompt;
+    }
+
     console.log(data, "<---dihandleSubmitForm");
   };
 
-  console.log({ topic }, "<---diCreateVideoForm");
+  console.log({ topic, topicPrompt }, "<---diCreateVideoForm");
 
   return (
     <form onSubmit={handleSubmit(handleSubmitForm)} className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -64,7 +74,7 @@ const CreateVideoForm = () => {
           </SelectContent>
         </Select>
 
-        {topic === "Custom Prompt" && <TextareaField id="topic" rows={4} cols={30} placeholder={`Write prompt on which you want to generate video`} />}
+        {topic === "Custom Prompt" && <TextareaField id="topic" rows={4} cols={30} placeholder={`Write prompt on which you want to generate video`} value={topicPrompt} onChange={(e) => setTopicPrompt(e.target.value)} />}
 
         {errors.topic && topic === undefined && <p className="absolute -bottom-6 text-red-500 text-sm">Voice type is {errors.topic.message as string}</p>}
       </div>
@@ -75,7 +85,7 @@ const CreateVideoForm = () => {
         </label>
         <Select value={duration} onValueChange={handleDurationChange}>
           <SelectTrigger>
-            <SelectValue placeholder="Select Topic of your video" />
+            <SelectValue placeholder="Select Duration" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
@@ -90,7 +100,7 @@ const CreateVideoForm = () => {
           </SelectContent>
         </Select>
 
-        {errors.topic && topic === undefined && <p className="absolute -bottom-6 text-red-500 text-sm">Voice type is {errors.topic.message as string}</p>}
+        {errors.duration && duration === undefined && <p className="absolute -bottom-6 text-red-500 text-sm">Duration is {errors.duration.message as string}</p>}
       </div>
 
       <motion.button

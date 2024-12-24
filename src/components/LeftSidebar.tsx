@@ -12,7 +12,7 @@ const LeftSidebar = () => {
 
   return (
     <section className="bg-rose-700 w-full max-w-[18rem] left_sidebar">
-      <aside className="bg-violet-700">
+      <aside className="bg-violet-700 pl-3">
         {sidebarLinks.map((item) => {
           const isActive = pathname === item.route || pathname.startsWith(`${item.route}/`);
           return (

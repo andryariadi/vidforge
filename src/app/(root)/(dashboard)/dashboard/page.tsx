@@ -3,7 +3,7 @@ import VideoCard from "@/components/VideoCard";
 
 const DashboardPage = () => {
   return (
-    <div className="bg-emerald-500 w-full max-w-7xl p-5 h-[100rem] space-y-7">
+    <div className="bg-emerald-500 w-full max-w-7xl px-10 py-5 h-[100rem] space-y-7">
       {/* Header */}
       <header className="bg-rose-500 flex items-center justify-between">
         <h1 className="text-20 font-bold text-white-1">Dashboard</h1>
