@@ -71,3 +71,26 @@ export const durationVideo = [
     time: "60 seconds",
   },
 ];
+
+export const themeVideo = [
+  {
+    name: "Realistic",
+    imgUrl: "/realistic.jpg",
+  },
+  {
+    name: "Cartoon",
+    imgUrl: "/cartoon.jpg",
+  },
+  {
+    name: "Comic",
+    imgUrl: "/comic.jpg",
+  },
+  {
+    name: "WaterColor",
+    imgUrl: "/water-color.jpg",
+  },
+  {
+    name: "GTA",
+    imgUrl: "/gta.jpg",
+  },
+];
