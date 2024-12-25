@@ -95,7 +95,7 @@ export const themeVideo = [
   },
 ];
 
-// Write a script to generate 30 seconds video on topic : Interesting historical  story along with AI image prompt in Realistic format for each scene and give me result in JSON format with imagePrompt and ContentText as field
+// Write a script to generate 30 seconds video on topic : Interesting historical story along with AI image prompt in Realistic format for each scene and give me result in JSON format with imagePrompt and ContentText as field
 
 // {
 //   "video_script": [
