@@ -18,7 +18,7 @@ const CreateVideoForm = () => {
   const [topicPrompt, setTopicPrompt] = useState<string>("");
 
   const [duration, setDuration] = useState<string>();
-  const [theme, setTheme] = useState<string>();
+  const [imageStyle, setImageStyle] = useState<string>();
 
   const handleTopicChange = (topic?: string) => {
     setValue("topic", topic ?? "");
@@ -30,9 +30,9 @@ const CreateVideoForm = () => {
     setDuration(duration);
   };
 
-  const handleThemeChange = (theme?: string) => {
-    setValue("theme", theme ?? "");
-    setTheme(theme);
+  const handleImageStyleChange = (imageStyle?: string) => {
+    setValue("imageStyle", imageStyle ?? "");
+    setImageStyle(imageStyle);
   };
 
   const {
@@ -56,11 +56,11 @@ const CreateVideoForm = () => {
     console.log(data, "<---dihandleSubmitForm");
   };
 
-  console.log({ topic, topicPrompt, duration, theme }, "<---diCreateVideoForm");
+  console.log({ topic, topicPrompt, duration, imageStyle }, "<---diCreateVideoForm");
 
   return (
     <form onSubmit={handleSubmit(handleSubmitForm)} className="grid grid-cols-1 md:grid-cols-2 gap-10">
-      <div className="relative space-y-2">
+      <div className="relative space-y-3">
         <label htmlFor="topic" className="text-white-2 text-sm font-bold">
           Content
         </label>
@@ -116,8 +116,8 @@ const CreateVideoForm = () => {
         </label>
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
           {themeVideo.map((item) => (
-            <figure key={item.name} className={`b-rose-700 relative space-y-1  overflow-hidden rounded-xl ${item.name === theme && "border-[3.5px] border-orange-1"}`}>
-              <Image src={item.imgUrl} alt={item.name} width={174} height={174} className="object-cover h-fit 2xl:h-80 w-full rounded-xl hover:scale-125 transition-all duration-300" onClick={() => handleThemeChange(item.name)} />
+            <figure key={item.name} className={`b-rose-700 relative space-y-1  overflow-hidden rounded-xl ${item.name === imageStyle && "border-[3.5px] border-orange-1"}`}>
+              <Image src={item.imgUrl} alt={item.name} width={174} height={174} className="object-cover h-fit 2xl:h-80 w-full rounded-xl hover:scale-125 transition-all duration-300" onClick={() => handleImageStyleChange(item.name)} />
 
               <figcaption className="bg-orange-1 absolute bottom-0 w-full h-7 flex items-center justify-center">
                 <p className="text-14 truncate font-normal capitalize text-white-1">{item.name}</p>
@@ -126,7 +126,7 @@ const CreateVideoForm = () => {
           ))}
         </div>
 
-        {errors.theme && theme === undefined && <p className="absolute -bottom-6 text-red-500 text-sm">Theme is {errors.theme.message as string}</p>}
+        {errors.imageStyle && imageStyle === undefined && <p className="absolute -bottom-6 text-red-500 text-sm">Image style is {errors.imageStyle.message as string}</p>}
       </div>
 
       <motion.button
