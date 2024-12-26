@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import textToSpeech from "@google-cloud/text-to-speech";
 import * as fs from "fs";
 import * as util from "util";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "@/lib/firebaseConfig";
 
 const client = new textToSpeech.TextToSpeechClient({
   apiKey: process.env.GOOGLE_API_KEY,
@@ -11,6 +13,8 @@ const client = new textToSpeech.TextToSpeechClient({
 export async function POST(req: Request) {
   try {
     const { text, id } = await req.json();
+
+    const storageRef = ref(storage, `vidforage-audio/${id}.mp3`);
 
     const request = {
       input: { text: text },
@@ -22,13 +26,16 @@ export async function POST(req: Request) {
 
     // Performs the text-to-speech request
     const [response] = await client.synthesizeSpeech(request);
-    // Write the binary audio content to a local file
-    const writeFile = util.promisify(fs.writeFile);
-    await writeFile("output.mp3", response.audioContent, "binary");
 
-    console.log({ text, id, request, response }, "<---digenerateAudio");
+    const audioBuffer = Buffer.from(response.audioContent, "binary");
 
-    return NextResponse.json({ result: "success" });
+    await uploadBytes(storageRef, audioBuffer, { contentType: "audio/mp3" });
+
+    const downloadURL = await getDownloadURL(storageRef);
+
+    console.log({ text, id, request, response, audioBuffer, downloadURL }, "<---digenerateAudio");
+
+    return NextResponse.json({ result: "success", downloadURL });
   } catch (error) {
     const errorAsError = error as Error;
     console.log(errorAsError, "<---dierrorGenerateAudio");
