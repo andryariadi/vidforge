@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ result: JSON.parse(result.response.text()) });
   } catch (error) {
     const errorAsError = error as Error;
-    console.log(errorAsError, "<---dicreatevideoscript");
+    console.log(errorAsError, "<---dierrorCreatevideoscript");
     return NextResponse.json({ Error: errorAsError.message });
   }
 }

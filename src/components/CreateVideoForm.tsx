@@ -14,7 +14,14 @@ import TextareaField from "./TextareaField";
 import Image from "next/image";
 import axios from "axios";
 import CustomLoading from "./CustomLoading";
-import { is } from "drizzle-orm";
+import toast from "react-hot-toast";
+import { toastStyle } from "@/lib/utils";
+import { v4 as uuidv4 } from "uuid";
+
+type VideoScriptData = {
+  contentText: string;
+  imagePrompt: string;
+};
 
 const CreateVideoForm = () => {
   const [topic, setTopic] = useState<string>();
@@ -22,6 +29,8 @@ const CreateVideoForm = () => {
 
   const [duration, setDuration] = useState<string>();
   const [imageStyle, setImageStyle] = useState<string>();
+
+  const [videoScripts, setVideoScripts] = useState();
 
   const handleTopicChange = (topic?: string) => {
     setValue("topic", topic ?? "");
@@ -62,10 +71,35 @@ const CreateVideoForm = () => {
 
     const res = await axios.post("/api/create-video-script", { prompt });
 
+    setVideoScripts(res.data.result.scenes);
+
+    generateAudioFile(res.data.result.scenes);
+
+    if (res.status === 200) {
+      toast.success("Video script generated successfully", { style: toastStyle });
+    }
     console.log({ prompt, res }, "<---dihandleSubmitForm2");
   };
 
-  console.log({ topic, topicPrompt, duration, imageStyle }, "<---diCreateVideoForm");
+  const generateAudioFile = async (videoScriptData: VideoScriptData[]) => {
+    try {
+      let script = "";
+
+      const id = uuidv4();
+
+      videoScriptData.forEach((scene) => {
+        script = script + scene.contentText + " ";
+      });
+
+      const res = await axios.post("/api/generate-audio", { text: script, id });
+
+      console.log({ script, res }, "<---digenerateAudioFile");
+    } catch (error) {
+      console.log(error, "<---digenerateAudioFile");
+    }
+  };
+
+  console.log({ topic, topicPrompt, duration, imageStyle, videoScripts }, "<---diCreateVideoForm");
 
   return (
     <>
