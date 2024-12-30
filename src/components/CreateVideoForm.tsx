@@ -31,6 +31,8 @@ const CreateVideoForm = () => {
   const [imageStyle, setImageStyle] = useState<string>();
 
   const [videoScripts, setVideoScripts] = useState();
+  const [audioFileUrl, setAudioFileUrl] = useState();
+  const [caption, setCaption] = useState();
 
   const handleTopicChange = (topic?: string) => {
     setValue("topic", topic ?? "");
@@ -93,13 +95,31 @@ const CreateVideoForm = () => {
 
       const res = await axios.post("/api/generate-audio", { text: script, id });
 
+      setAudioFileUrl(res.data.downloadURL);
+
+      generateAudioCaption(res.data.downloadURL);
+
       console.log({ script, res }, "<---digenerateAudioFile");
     } catch (error) {
       console.log(error, "<---digenerateAudioFile");
     }
   };
 
-  console.log({ topic, topicPrompt, duration, imageStyle, videoScripts }, "<---diCreateVideoForm");
+  const generateAudioCaption = async (audioFileUrl: string) => {
+    try {
+      const res = await axios.post("/api/generate-caption", {
+        audioFileUrl,
+      });
+
+      setCaption(res.data.transcript);
+
+      console.log({ audioFileUrl, res }, "<---digenerateAudioCaption");
+    } catch (error) {
+      console.log(error, "<---digenerateAudioCaption");
+    }
+  };
+
+  console.log({ topic, topicPrompt, duration, imageStyle, videoScripts, audioFileUrl, caption }, "<---diCreateVideoForm");
 
   return (
     <>
