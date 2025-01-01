@@ -7,7 +7,7 @@ export async function POST(req: Request) {
 
     const result = await chatSession.sendMessage(prompt);
 
-    console.log({ prompt, res: JSON.parse(result.response.text()) }, "<---dicreatevideoscript");
+    // console.log({ prompt, res: JSON.parse(result.response.text()) }, "<---dicreatevideoscript");
 
     return NextResponse.json({ result: JSON.parse(result.response.text()) });
   } catch (error) {

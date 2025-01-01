@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import textToSpeech from "@google-cloud/text-to-speech";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "@/lib/firebaseConfig";
+import { uploadToFirebaseStorage } from "@/lib/uploadToFirebase";
 
 const client = new textToSpeech.TextToSpeechClient({
   apiKey: process.env.GOOGLE_API_KEY,
@@ -27,11 +28,12 @@ export async function POST(req: Request) {
 
     const audioBuffer = Buffer.from(response.audioContent, "binary");
 
-    await uploadBytes(storageRef, audioBuffer, { contentType: "audio/mp3" });
+    const filePath = `vidforage-audio/${id}.mp3`;
+    const downloadURL = await uploadToFirebaseStorage(audioBuffer, filePath, "audio/mp3");
 
-    const downloadURL = await getDownloadURL(storageRef);
+    // const downloadURL = await getDownloadURL(storageRef);
 
-    console.log({ text, id, request, response, audioBuffer, downloadURL }, "<---digenerateAudio");
+    // console.log({ text, id, request, response, audioBuffer, downloadURL }, "<---digenerateAudio");
 
     return NextResponse.json({ result: "success", downloadURL });
   } catch (error) {

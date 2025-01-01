@@ -30,9 +30,10 @@ const CreateVideoForm = () => {
   const [duration, setDuration] = useState<string>();
   const [imageStyle, setImageStyle] = useState<string>();
 
-  const [videoScripts, setVideoScripts] = useState();
+  const [videoScripts, setVideoScripts] = useState<VideoScriptData[]>([]);
   const [audioFileUrl, setAudioFileUrl] = useState();
   const [caption, setCaption] = useState();
+  const [imageList, setImageList] = useState<string[]>([]);
 
   const handleTopicChange = (topic?: string) => {
     setValue("topic", topic ?? "");
@@ -77,6 +78,8 @@ const CreateVideoForm = () => {
 
     generateAudioFile(res.data.result.scenes);
 
+    generateImage(res.data.result.scenes);
+
     if (res.status === 200) {
       toast.success("Video script generated successfully", { style: toastStyle });
     }
@@ -101,7 +104,7 @@ const CreateVideoForm = () => {
 
       console.log({ script, res }, "<---digenerateAudioFile");
     } catch (error) {
-      console.log(error, "<---digenerateAudioFile");
+      console.log(error, "<---dierrorGenerateAudioFile");
     }
   };
 
@@ -113,13 +116,33 @@ const CreateVideoForm = () => {
 
       setCaption(res.data.transcript);
 
+      // generateImage();
+
       console.log({ audioFileUrl, res }, "<---digenerateAudioCaption");
     } catch (error) {
-      console.log(error, "<---digenerateAudioCaption");
+      console.log(error, "<---dierrorGenerateAudioCaption");
     }
   };
 
-  console.log({ topic, topicPrompt, duration, imageStyle, videoScripts, audioFileUrl, caption }, "<---diCreateVideoForm");
+  const generateImage = async (vidScripts?: VideoScriptData[]) => {
+    try {
+      const images: string[] = [];
+
+      vidScripts?.forEach(async (scene: VideoScriptData) => {
+        const res = await axios.post("/api/generate-image", { prompt: scene.imagePrompt });
+
+        images.push(res.data.output);
+
+        console.log({ res }, "<---digenerateImage");
+      });
+
+      setImageList(images);
+    } catch (error) {
+      console.log(error, "<---dierrorGenerateImage");
+    }
+  };
+
+  console.log({ topic, topicPrompt, duration, imageStyle, videoScripts, audioFileUrl, caption, imageList }, "<---diCreateVideoForm");
 
   return (
     <>
