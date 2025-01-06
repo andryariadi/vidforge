@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { BiLoaderCircle } from "react-icons/bi";
 import { BsSend } from "react-icons/bs";
 import { durationVideo, themeVideo, topicVideo } from "@/app/constant";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import TextareaField from "./TextareaField";
 import Image from "next/image";
 import axios from "axios";
@@ -17,13 +17,15 @@ import CustomLoading from "./CustomLoading";
 import toast from "react-hot-toast";
 import { toastStyle } from "@/lib/utils";
 import { v4 as uuidv4 } from "uuid";
-
-type VideoScriptData = {
-  contentText: string;
-  imagePrompt: string;
-};
+import { VideoDataStore, VideoScriptData } from "@/lib/types";
+import { VideoDataContext } from "./VidoeDataContext";
+import { db } from "@/db/config-db";
+import { useUser } from "@clerk/nextjs";
+import { VideoData } from "@/db/schema";
 
 const CreateVideoForm = () => {
+  const [loading, setLoading] = useState(false);
+
   const [topic, setTopic] = useState<string>();
   const [topicPrompt, setTopicPrompt] = useState<string>("");
 
@@ -31,9 +33,13 @@ const CreateVideoForm = () => {
   const [imageStyle, setImageStyle] = useState<string>();
 
   const [videoScripts, setVideoScripts] = useState<VideoScriptData[]>([]);
-  const [audioFileUrl, setAudioFileUrl] = useState();
-  const [caption, setCaption] = useState();
-  const [imageList, setImageList] = useState<string[]>([]);
+  const [audioFileUrl, setAudioFileUrl] = useState<string>("");
+  const [caption, setCaption] = useState<string>("");
+  const [imageLists, setImageLists] = useState<string[]>([]);
+
+  const { videoData, setVideoData } = useContext(VideoDataContext);
+
+  const { user } = useUser();
 
   const handleTopicChange = (topic?: string) => {
     setValue("topic", topic ?? "");
@@ -51,7 +57,6 @@ const CreateVideoForm = () => {
   };
 
   const {
-    // register,
     setValue,
     handleSubmit,
     formState: { errors, isSubmitting },
@@ -65,6 +70,8 @@ const CreateVideoForm = () => {
   });
 
   const handleSubmitForm: SubmitHandler<z.infer<typeof videoSchema>> = async (data) => {
+    setLoading(true);
+
     if (data.topic === "Custom Prompt") {
       data.topic = topicPrompt;
     }
@@ -74,19 +81,26 @@ const CreateVideoForm = () => {
 
     const res = await axios.post("/api/create-video-script", { prompt });
 
-    setVideoScripts(res.data.result.scenes);
+    const scenes = res.data.result.scenes;
 
-    generateAudioFile(res.data.result.scenes);
+    setVideoScripts(scenes);
 
-    generateImage(res.data.result.scenes);
+    setVideoData((prev: VideoDataStore) => ({
+      ...prev,
+      videoScripts: scenes,
+    }));
 
-    if (res.status === 200) {
-      toast.success("Video script generated successfully", { style: toastStyle });
-    }
+    await generateAudioFile(scenes);
+
+    await generateImage(scenes);
+
     console.log({ prompt, res }, "<---dihandleSubmitForm2");
   };
 
+  // Generate Audio File
   const generateAudioFile = async (videoScriptData: VideoScriptData[]) => {
+    setLoading(true);
+
     try {
       let script = "";
 
@@ -100,6 +114,11 @@ const CreateVideoForm = () => {
 
       setAudioFileUrl(res.data.downloadURL);
 
+      setVideoData((prev: VideoDataStore) => ({
+        ...prev,
+        audioFileUrl: res.data.downloadURL,
+      }));
+
       generateAudioCaption(res.data.downloadURL);
 
       console.log({ script, res }, "<---digenerateAudioFile");
@@ -108,7 +127,10 @@ const CreateVideoForm = () => {
     }
   };
 
+  // Generate Audio Caption
   const generateAudioCaption = async (audioFileUrl: string) => {
+    setLoading(true);
+
     try {
       const res = await axios.post("/api/generate-caption", {
         audioFileUrl,
@@ -116,7 +138,10 @@ const CreateVideoForm = () => {
 
       setCaption(res.data.transcript);
 
-      // generateImage();
+      setVideoData((prev: VideoDataStore) => ({
+        ...prev,
+        caption: res.data.transcript,
+      }));
 
       console.log({ audioFileUrl, res }, "<---digenerateAudioCaption");
     } catch (error) {
@@ -124,25 +149,76 @@ const CreateVideoForm = () => {
     }
   };
 
+  // Generate Image
   const generateImage = async (vidScripts?: VideoScriptData[]) => {
+    setLoading(true);
+
     try {
       const images: string[] = [];
 
-      vidScripts?.forEach(async (scene: VideoScriptData) => {
-        const res = await axios.post("/api/generate-image", { prompt: scene.imagePrompt });
+      for (const scene of vidScripts!) {
+        try {
+          const res = await axios.post("/api/generate-image", { prompt: scene.imagePrompt });
 
-        images.push(res.data.output);
+          images.push(res.data.output);
 
-        console.log({ res }, "<---digenerateImage");
-      });
+          console.log({ res }, "<---digenerateImage");
+        } catch (error) {
+          console.log(error, "<---dierrorGenerateImageClient");
+        }
+      }
 
-      setImageList(images);
+      setImageLists(images);
+
+      setVideoData((prev: VideoDataStore) => ({
+        ...prev,
+        imageLists: images,
+      }));
     } catch (error) {
       console.log(error, "<---dierrorGenerateImage");
     }
   };
 
-  console.log({ topic, topicPrompt, duration, imageStyle, videoScripts, audioFileUrl, caption, imageList }, "<---diCreateVideoForm");
+  useEffect(() => {
+    const saveVideoData = async (videoData: VideoDataStore) => {
+      console.log({ videoData }, "<--- disaveVideoData1");
+
+      setLoading(true);
+
+      const script = JSON.stringify(videoData?.videoScripts);
+
+      try {
+        const res = await db
+          .insert(VideoData)
+          .values({
+            script: script,
+            audioFileUrl: videoData?.audioFileUrl as string,
+            captions: videoData?.caption,
+            imageLists: videoData?.imageLists,
+            createdBy: user?.fullName as string,
+          })
+          .returning({ id: VideoData.id });
+
+        console.log({ res }, "<--- disaveVideoData2");
+
+        if (res[0].id) toast.success("Video data generated successfully", { style: toastStyle });
+      } catch (error) {
+        console.error(error, "<--- dierrorSaveVideoData");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    console.log({ videoData }, "<---disaveVideoData3");
+
+    if (videoData && Object.keys(videoData).length == 4) {
+      saveVideoData(videoData);
+    } else {
+      console.error("videoData is undefined or empty");
+    }
+  }, [videoData]);
+
+  console.log({ topic, topicPrompt, duration, imageStyle, videoScripts, audioFileUrl, caption, imageLists, videoData }, "<---diCreateVideoForm");
 
   return (
     <>
@@ -234,7 +310,7 @@ const CreateVideoForm = () => {
         </motion.button>
       </form>
 
-      <CustomLoading loading={isSubmitting} />
+      <CustomLoading loading={loading} />
     </>
   );
 };

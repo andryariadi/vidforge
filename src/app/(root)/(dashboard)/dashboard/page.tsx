@@ -1,7 +1,15 @@
+"use client";
+
 import ButtonMotion from "@/components/Button";
 import VideoCard from "@/components/VideoCard";
+import { VideoDataContext } from "@/components/VidoeDataContext";
+import { useContext } from "react";
 
 const DashboardPage = () => {
+  const { videoData } = useContext(VideoDataContext);
+
+  console.log({ videoData }, "<---diDashboardPage");
+
   return (
     <div className="bg-emerald-500 w-full max-w-7xl px-10 py-5 h-[100rem] space-y-7">
       {/* Header */}
