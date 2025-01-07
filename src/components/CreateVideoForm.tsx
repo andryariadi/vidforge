@@ -22,6 +22,7 @@ import { VideoDataContext } from "./VidoeDataContext";
 import { db } from "@/db/config-db";
 import { useUser } from "@clerk/nextjs";
 import { VideoData } from "@/db/schema";
+import PlayerDialog from "./PlayerDialog";
 
 const CreateVideoForm = () => {
   const [loading, setLoading] = useState(false);
@@ -40,6 +41,9 @@ const CreateVideoForm = () => {
   const { videoData, setVideoData } = useContext(VideoDataContext);
 
   const { user } = useUser();
+
+  const [playVideo, setPlayVideo] = useState<boolean>(true);
+  const [videoId, setVideoId] = useState<number>();
 
   const handleTopicChange = (topic?: string) => {
     setValue("topic", topic ?? "");
@@ -136,11 +140,11 @@ const CreateVideoForm = () => {
         audioFileUrl,
       });
 
-      setCaption(res.data.transcript);
+      setCaption(res.data.transcript.text);
 
       setVideoData((prev: VideoDataStore) => ({
         ...prev,
-        caption: res.data.transcript,
+        caption: res.data.transcript.words,
       }));
 
       console.log({ audioFileUrl, res }, "<---digenerateAudioCaption");
@@ -179,38 +183,38 @@ const CreateVideoForm = () => {
     }
   };
 
+  const saveVideoData = async (videoData: VideoDataStore) => {
+    console.log({ videoData }, "<--- disaveVideoData1");
+
+    setLoading(true);
+
+    try {
+      const res = await db
+        .insert(VideoData)
+        .values({
+          script: videoData?.videoScripts,
+          audioFileUrl: videoData?.audioFileUrl as string,
+          captions: videoData?.caption,
+          imageLists: videoData?.imageLists,
+          createdBy: user?.fullName as string,
+        })
+        .returning({ id: VideoData.id });
+
+      console.log({ res }, "<--- disaveVideoData2");
+
+      if (res[0].id) toast.success("Video data generated successfully", { style: toastStyle });
+
+      setVideoId(res[0].id);
+
+      setPlayVideo(true);
+    } catch (error) {
+      console.error(error, "<--- dierrorSaveVideoData");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const saveVideoData = async (videoData: VideoDataStore) => {
-      console.log({ videoData }, "<--- disaveVideoData1");
-
-      setLoading(true);
-
-      const script = JSON.stringify(videoData?.videoScripts);
-
-      try {
-        const res = await db
-          .insert(VideoData)
-          .values({
-            script: script,
-            audioFileUrl: videoData?.audioFileUrl as string,
-            captions: videoData?.caption,
-            imageLists: videoData?.imageLists,
-            createdBy: user?.fullName as string,
-          })
-          .returning({ id: VideoData.id });
-
-        console.log({ res }, "<--- disaveVideoData2");
-
-        if (res[0].id) toast.success("Video data generated successfully", { style: toastStyle });
-      } catch (error) {
-        console.error(error, "<--- dierrorSaveVideoData");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    console.log({ videoData }, "<---disaveVideoData3");
-
     if (videoData && Object.keys(videoData).length == 4) {
       saveVideoData(videoData);
     } else {
@@ -311,6 +315,8 @@ const CreateVideoForm = () => {
       </form>
 
       <CustomLoading loading={loading} />
+
+      <PlayerDialog playVidoe={playVideo} videoId={videoId} />
     </>
   );
 };

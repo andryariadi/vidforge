@@ -26,7 +26,7 @@ export async function POST(req: Request) {
       console.log(`Speaker ${utterance.speaker}: ${utterance.text}`);
     }
 
-    return NextResponse.json({ result: "success", transcript: transcript.text });
+    return NextResponse.json({ result: "success", transcript });
   } catch (error) {
     const errorAsError = error as Error;
     console.log(errorAsError, "<---dierrorGenerateCaption");
