@@ -43,7 +43,7 @@ const CreateVideoForm = () => {
   const { user } = useUser();
 
   const [playVideo, setPlayVideo] = useState<boolean>(true);
-  const [videoId, setVideoId] = useState<number>();
+  const [videoId, setVideoId] = useState<number>(31);
 
   const handleTopicChange = (topic?: string) => {
     setValue("topic", topic ?? "");
@@ -316,7 +316,7 @@ const CreateVideoForm = () => {
 
       <CustomLoading loading={loading} />
 
-      <PlayerDialog playVidoe={playVideo} videoId={videoId} />
+      {playVideo && videoId && <PlayerDialog playVideo={playVideo} videoId={videoId} />}
     </>
   );
 };

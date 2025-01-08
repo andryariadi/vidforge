@@ -7,13 +7,27 @@ import RemotionVideo from "./RemotionVideo";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { RiVideoUploadLine } from "react-icons/ri";
+import { getVideoData } from "@/lib/actions";
+import { VideoData } from "@/lib/types";
 
-const PlayerDialog = ({ playVidoe, videoId }: { playVidoe: boolean; videoId: number }) => {
+const PlayerDialog = ({ playVideo, videoId }: { playVideo: boolean; videoId: number }) => {
   const [openDialog, setOpenDialog] = useState(false);
+  const [videoData, setvideoData] = useState<VideoData[]>([]);
+  const [durationInFrame, setDurationInFrame] = useState<number>(100);
 
   useEffect(() => {
-    setOpenDialog(playVidoe);
-  }, [playVidoe]);
+    const asyncLoadVideoData = async () => {
+      setOpenDialog(playVideo);
+
+      if (videoId) {
+        const res = await getVideoData(videoId);
+        console.log(res, "<---playerDialog");
+
+        setvideoData(res?.videoData as VideoData[]);
+      }
+    };
+    asyncLoadVideoData();
+  }, [playVideo, videoId]);
 
   return (
     <Dialog open={openDialog}>
@@ -21,8 +35,19 @@ const PlayerDialog = ({ playVidoe, videoId }: { playVidoe: boolean; videoId: num
         <DialogHeader className="space-y-5">
           <DialogTitle className="text-2xl font-bold text-center">Your vidoe is ready to publish</DialogTitle>
 
-          <DialogDescription className="bg-violet-600 flex flex-col items-center">
-            <Player component={RemotionVideo} durationInFrames={120} compositionWidth={300} compositionHeight={450} fps={30} />
+          <DialogDescription className="bg-violet-600 flex flex-col items-center gap-5 rounded-lg overflow-hidden">
+            <Player
+              component={RemotionVideo}
+              durationInFrames={Number(durationInFrame.toFixed(0))}
+              compositionWidth={300}
+              compositionHeight={450}
+              fps={30}
+              controls
+              inputProps={{
+                videoData: videoData[0],
+                setDurationInFrame: (durationInFrame: number) => setDurationInFrame(durationInFrame),
+              }}
+            />
 
             <div className="w-full flex items-center justify-between">
               <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.95 }} className="border-2 border-orange-1 button_bold-16 px-5 py-[10px] rounded-md">

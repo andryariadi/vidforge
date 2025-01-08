@@ -10,18 +10,19 @@ export interface VideoDataStore {
   imageLists?: string[];
 }
 
+export type Caption = {
+  text: string;
+  start: number; // in milliseconds
+  end: number; // in milliseconds
+  confidence: number;
+  speaker: string;
+};
+
 export interface VideoData {
   id: number;
   script: Record<string, unknown>;
   audioFileUrl: string;
-  captions: Record<string, unknown>;
+  captions: Caption[];
   imageLists?: string[];
   createdBy: string;
 }
-
-// [
-//   videoScripts: []
-//   audioFileUrl: 'blabla'
-//   caption: 'blabla'
-//   imageLists: ['blabla', 'blabla'];
-// ]
