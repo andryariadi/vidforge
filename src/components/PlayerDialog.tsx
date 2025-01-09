@@ -9,8 +9,11 @@ import { motion } from "framer-motion";
 import { RiVideoUploadLine } from "react-icons/ri";
 import { getVideoData } from "@/lib/actions";
 import { VideoData } from "@/lib/types";
+import { useRouter } from "next/navigation";
 
 const PlayerDialog = ({ playVideo, videoId }: { playVideo: boolean; videoId: number }) => {
+  const router = useRouter();
+
   const [openDialog, setOpenDialog] = useState(false);
   const [videoData, setvideoData] = useState<VideoData[]>([]);
   const [durationInFrame, setDurationInFrame] = useState<number>(100);
@@ -50,7 +53,15 @@ const PlayerDialog = ({ playVideo, videoId }: { playVideo: boolean; videoId: num
             />
 
             <div className="w-full flex items-center justify-between">
-              <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.95 }} className="border-2 border-orange-1 button_bold-16 px-5 py-[10px] rounded-md">
+              <motion.button
+                onClick={() => {
+                  router.replace("/dashboard");
+                  setOpenDialog(false);
+                }}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.95 }}
+                className="border-2 border-orange-1 button_bold-16 px-5 py-[10px] rounded-md"
+              >
                 <span className="text-orange-1">Cancel</span>
               </motion.button>
 

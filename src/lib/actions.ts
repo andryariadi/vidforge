@@ -15,3 +15,15 @@ export const getVideoData = async (videoId: number) => {
     console.log(error, "<---errorGetVideoData");
   }
 };
+
+export const getVideoLists = async (username: string) => {
+  try {
+    const videoLists = await db.select().from(VideoData).where(eq(VideoData.createdBy, username));
+
+    console.log({ videoLists }, "<---getVideoLists");
+
+    return { success: true, videoLists };
+  } catch (error) {
+    console.log(error, "<---errorGetVideoLists");
+  }
+};
