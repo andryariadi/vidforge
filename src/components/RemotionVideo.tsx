@@ -1,6 +1,6 @@
 import { VideoData } from "@/lib/types";
 import Image from "next/image";
-import { AbsoluteFill, Audio, Sequence, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Audio, interpolate, Sequence, useCurrentFrame, useVideoConfig } from "remotion";
 
 const RemotionVideo = ({ videoData, setDurationInFrame }: { videoData: VideoData; setDurationInFrame: (duration: number) => void }) => {
   const { fps } = useVideoConfig();
@@ -8,7 +8,7 @@ const RemotionVideo = ({ videoData, setDurationInFrame }: { videoData: VideoData
 
   if (!videoData) return null;
 
-  const { script, audioFileUrl, captions, imageLists } = videoData;
+  const { audioFileUrl, captions, imageLists } = videoData;
 
   const getDurationFrame = () => {
     const lastCaption = captions[captions.length - 1];
@@ -36,15 +36,22 @@ const RemotionVideo = ({ videoData, setDurationInFrame }: { videoData: VideoData
   return (
     <AbsoluteFill className="bg-black-3">
       {imageLists?.map((item, idx) => {
-        const from = (idx * getDurationFrame()) / imageLists.length;
+        const startTime = (idx * getDurationFrame()) / imageLists.length;
+        const durationInFrames = getDurationFrame();
+
+        const zoomEffect = (idx: number) =>
+          interpolate(frame, [startTime, startTime + durationInFrames / 2, startTime + durationInFrames], idx % 2 == 0 ? [1, 1.8, 1] : [1.3, 1, 1.3], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
         return (
-          <Sequence key={idx} from={from} durationInFrames={getDurationFrame()}>
+          <Sequence key={idx} from={startTime} durationInFrames={durationInFrames}>
             <Image
               src={item}
               alt={`Frame ${idx + 1}`}
               layout="fill" // Use fill layout for responsive images
               objectFit="cover" // Cover to maintain aspect ratio
+              style={{
+                transform: `scale(${zoomEffect(idx)})`,
+              }}
             />
 
             <AbsoluteFill className="b-violet-500 flex items-center justify-center text-white-1 shadow-black-1">
