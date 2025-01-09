@@ -1,9 +1,10 @@
 import { VideoData } from "@/lib/types";
 import Image from "next/image";
-import { AbsoluteFill, Audio, Sequence, useVideoConfig } from "remotion";
+import { AbsoluteFill, Audio, Sequence, useCurrentFrame, useVideoConfig } from "remotion";
 
 const RemotionVideo = ({ videoData, setDurationInFrame }: { videoData: VideoData; setDurationInFrame: (duration: number) => void }) => {
   const { fps } = useVideoConfig();
+  const frame = useCurrentFrame();
 
   if (!videoData) return null;
 
@@ -21,6 +22,15 @@ const RemotionVideo = ({ videoData, setDurationInFrame }: { videoData: VideoData
     return durationFrame;
   };
 
+  const getCurrentCaptions = () => {
+    const currentTime = (frame / 30) * 1000;
+    const currentCaption = captions.find((word) => currentTime >= word.start && currentTime <= word.end);
+
+    console.log({ currentTime, currentCaption }, "<---getCurrentCaptions");
+
+    return currentCaption ? currentCaption.text : "";
+  };
+
   console.log(videoData, "<---RemotionVideo");
 
   return (
@@ -36,6 +46,10 @@ const RemotionVideo = ({ videoData, setDurationInFrame }: { videoData: VideoData
               layout="fill" // Use fill layout for responsive images
               objectFit="cover" // Cover to maintain aspect ratio
             />
+
+            <AbsoluteFill className="b-violet-500 flex items-center justify-center text-white-1 shadow-black-1">
+              <p className="text-lg font-semibold">{getCurrentCaptions()}</p>
+            </AbsoluteFill>
           </Sequence>
         );
       })}
