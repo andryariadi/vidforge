@@ -21,8 +21,10 @@ import { VideoDataStore, VideoScriptData } from "@/lib/types";
 import { VideoDataContext } from "./VidoeDataContext";
 import { db } from "@/db/config-db";
 import { useUser } from "@clerk/nextjs";
-import { VideoData } from "@/db/schema";
+import { Users, VideoData } from "@/db/schema";
 import PlayerDialog from "./PlayerDialog";
+import { useUserStore } from "@/lib/useUserStore";
+import { eq } from "drizzle-orm";
 
 const CreateVideoForm = () => {
   const [loading, setLoading] = useState(false);
@@ -39,11 +41,12 @@ const CreateVideoForm = () => {
   const [imageLists, setImageLists] = useState<string[]>([]);
 
   const { videoData, setVideoData } = useContext(VideoDataContext);
+  const { user: userDetail, setUser } = useUserStore();
 
   const { user } = useUser();
 
-  const [playVideo, setPlayVideo] = useState<boolean>(true);
-  const [videoId, setVideoId] = useState<number>(31);
+  const [playVideo, setPlayVideo] = useState<boolean>(false);
+  const [videoId, setVideoId] = useState<number>();
 
   const handleTopicChange = (topic?: string) => {
     setValue("topic", topic ?? "");
@@ -74,6 +77,13 @@ const CreateVideoForm = () => {
   });
 
   const handleSubmitForm: SubmitHandler<z.infer<typeof videoSchema>> = async (data) => {
+    if (userDetail && userDetail.credits === 0) {
+      toast.error("You dont enough credits!", {
+        style: toastStyle,
+      });
+      return;
+    }
+
     setLoading(true);
 
     if (data.topic === "Custom Prompt") {
@@ -204,6 +214,8 @@ const CreateVideoForm = () => {
 
       if (res[0].id) toast.success("Video data generated successfully", { style: toastStyle });
 
+      await updateUserCredits();
+
       setVideoId(res[0].id);
 
       setPlayVideo(true);
@@ -211,6 +223,23 @@ const CreateVideoForm = () => {
       console.error(error, "<--- dierrorSaveVideoData");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const updateUserCredits = async () => {
+    if (!user?.primaryEmailAddress?.emailAddress) return;
+
+    try {
+      const res = await db
+        .update(Users)
+        .set({
+          credits: userDetail?.credits && userDetail?.credits - 10,
+        })
+        .where(eq(Users?.email, user?.primaryEmailAddress?.emailAddress));
+
+      console.log({ res }, "<---diupdateUserCredits");
+    } catch (error) {
+      console.log(error, "<---diupdateUserCredits");
     }
   };
 

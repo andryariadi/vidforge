@@ -41,7 +41,7 @@ const VideoCard = () => {
       {videoLists.length === 0 && <EmptyState />}
 
       {/* Video Lists */}
-      <div className="bg-rose-700 grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-1">
+      <div className="bg-rose-700 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-1 gap-y-10">
         {videoLists.map((video) => (
           <figure key={video.id} className="bg-violet-600 w-fit overflow-hidden" onClick={() => handleClickVideoDialog(video.id)}>
             <Thumbnail

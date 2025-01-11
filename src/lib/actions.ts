@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db/config-db";
-import { VideoData } from "@/db/schema";
+import { VideoData, Users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 export const getVideoData = async (videoId: number) => {
@@ -25,5 +25,17 @@ export const getVideoLists = async (username: string) => {
     return { success: true, videoLists };
   } catch (error) {
     console.log(error, "<---errorGetVideoLists");
+  }
+};
+
+export const getUserDetail = async (email: string) => {
+  try {
+    const user = await db.select().from(Users).where(eq(Users.email, email));
+
+    console.log({ user }, "<---getUserDetail");
+
+    return { success: true, user };
+  } catch (error) {
+    console.log(error, "<---errorGetUserDetail");
   }
 };

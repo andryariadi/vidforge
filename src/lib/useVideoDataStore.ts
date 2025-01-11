@@ -4,9 +4,9 @@ import { create } from "zustand";
 interface VideoStore {
   videoData: {
     videoScripts: { imagePrompt: string; contentText: string }[]; // Array of objects for video scripts
-    audioFileUrl: string; // String for audio file URL
-    caption: string; // String for caption
-    imageLists: string[]; // Array of strings for image URLs
+    audioFileUrl: string;
+    caption: string;
+    imageLists: string[];
   }[];
   setVideoData: (scenes: { imagePrompt: string; contentText: string }[], audioFileUrl: string, caption: string, images: string[]) => void;
 }

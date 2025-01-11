@@ -26,3 +26,12 @@ export interface VideoData {
   imageLists?: string[];
   createdBy: string;
 }
+
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  imageUrl?: string | null;
+  subscription: boolean;
+  credits: number;
+}
