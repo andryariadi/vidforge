@@ -46,10 +46,12 @@ const Navbar = () => {
 
       <div className="b-green-700 flex items-center gap-5">
         {/* Credits */}
-        <div className="flex items-center gap-2">
-          <PiCoinsFill size={24} className="text-yellow-500" />
-          <span>{userDetail?.credits}</span>
-        </div>
+        {user && userDetail?.credits !== undefined && userDetail.credits >= 0 && (
+          <div className="flex items-center gap-2">
+            <PiCoinsFill size={24} className="text-yellow-500" />
+            <span>{userDetail.credits}</span>
+          </div>
+        )}
 
         {user && <UserButton />}
 

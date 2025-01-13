@@ -3,6 +3,8 @@
 import { db } from "@/db/config-db";
 import { VideoData, Users } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { User as UserDetail } from "./types";
+import { revalidatePath } from "next/cache";
 
 export const getVideoData = async (videoId: number) => {
   try {
@@ -37,5 +39,24 @@ export const getUserDetail = async (email: string) => {
     return { success: true, user };
   } catch (error) {
     console.log(error, "<---errorGetUserDetail");
+  }
+};
+
+export const updateUserCredits = async ({ userEmail, userDetail }: { userEmail: string; userDetail: UserDetail }) => {
+  console.log({ userEmail, userDetail }, "<---diupdateUserCredits");
+
+  try {
+    const res = await db
+      .update(Users)
+      .set({
+        credits: userDetail?.credits && userDetail?.credits - 10,
+      })
+      .where(eq(Users?.email, userEmail));
+
+    revalidatePath("/");
+
+    console.log({ res }, "<---diupdateUserCredits");
+  } catch (error) {
+    console.log(error, "<---diupdateUserCredits");
   }
 };

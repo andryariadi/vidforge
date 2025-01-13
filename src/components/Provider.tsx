@@ -2,11 +2,9 @@
 
 import { db } from "@/db/config-db";
 import { Users } from "@/db/schema";
-import { toastStyle } from "@/lib/utils";
 import { useUser } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
 import { useEffect } from "react";
-import toast from "react-hot-toast";
 
 const Provider = ({ children }: { children: React.ReactNode }) => {
   const { user } = useUser();
@@ -21,8 +19,6 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
             name: user?.fullName as string,
             email: email,
           });
-        } else {
-          toast.success(`Welcome back ${user?.fullName}`, { style: toastStyle });
         }
       } catch (error) {
         console.log(error);

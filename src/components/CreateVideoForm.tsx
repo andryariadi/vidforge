@@ -17,14 +17,14 @@ import CustomLoading from "./CustomLoading";
 import toast from "react-hot-toast";
 import { toastStyle } from "@/lib/utils";
 import { v4 as uuidv4 } from "uuid";
-import { VideoDataStore, VideoScriptData } from "@/lib/types";
+import { VideoDataStore, VideoScriptData, User } from "@/lib/types";
 import { VideoDataContext } from "./VidoeDataContext";
 import { db } from "@/db/config-db";
 import { useUser } from "@clerk/nextjs";
-import { Users, VideoData } from "@/db/schema";
+import { VideoData } from "@/db/schema";
 import PlayerDialog from "./PlayerDialog";
 import { useUserStore } from "@/lib/useUserStore";
-import { eq } from "drizzle-orm";
+import { updateUserCredits } from "@/lib/actions";
 
 const CreateVideoForm = () => {
   const [loading, setLoading] = useState(false);
@@ -212,9 +212,14 @@ const CreateVideoForm = () => {
 
       console.log({ res }, "<--- disaveVideoData2");
 
-      if (res[0].id) toast.success("Video data generated successfully", { style: toastStyle });
+      if (res[0].id) toast.success("Video generated successfully", { style: toastStyle });
 
-      await updateUserCredits();
+      if (user && user.primaryEmailAddress && userDetail && res[0].id) {
+        const userEmail = user?.primaryEmailAddress?.emailAddress;
+        await updateUserCredits({ userEmail, userDetail });
+
+        setUser({ ...userDetail, credits: userDetail.credits - 10 });
+      }
 
       setVideoId(res[0].id);
 
@@ -223,23 +228,6 @@ const CreateVideoForm = () => {
       console.error(error, "<--- dierrorSaveVideoData");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const updateUserCredits = async () => {
-    if (!user?.primaryEmailAddress?.emailAddress) return;
-
-    try {
-      const res = await db
-        .update(Users)
-        .set({
-          credits: userDetail?.credits && userDetail?.credits - 10,
-        })
-        .where(eq(Users?.email, user?.primaryEmailAddress?.emailAddress));
-
-      console.log({ res }, "<---diupdateUserCredits");
-    } catch (error) {
-      console.log(error, "<---diupdateUserCredits");
     }
   };
 
