@@ -11,10 +11,10 @@ const DashboardPage = () => {
   console.log({ videoData }, "<---diDashboardPage");
 
   return (
-    <div className="bg-emerald-500 w-full max-w-7xl px-10 py-5 h-[100rem] space-y-7">
+    <div className="bg-emerald-500 w-full max-w-7xl px-5 md:px-10 py-5 h-[100rem] space-y-7">
       {/* Header */}
       <header className="bg-rose-500 flex items-center justify-between">
-        <h1 className="text-20 font-bold text-white-1">Dashboard</h1>
+        <h1 className="text-16 md:text-20 font-bold text-white-1">Dashboard</h1>
         <ButtonMotion title="Create Video" link="/create-video" icon />
       </header>
 

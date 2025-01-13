@@ -23,7 +23,7 @@ html {
     @apply sticky right-0 top-0 flex w-[310px] flex-col overflow-y-hidden border-none bg-black-1 px-[30px] pt-8 max-xl:hidden;
   }
   .left_sidebar {
-    @apply sticky left-0 top-[4.5rem] flex flex-col border-r border-black-6 bg-black-1 pt-5 text-gray-300/90 max-md:hidden max-h-screen h-[calc(100vh-4.5rem)];
+    @apply sticky left-0 top-[4.5rem] flex flex-col border-r border-black-6  pt-5 text-gray-300/90 max-md:hidden max-h-screen h-[calc(100vh-4.5rem)];
   }
   .generate_thumbnail {
     @apply flex w-full max-w-[520px] flex-col justify-between gap-2 rounded-lg border border-black-6 bg-black-1 px-2.5 py-2 md:flex-row md:gap-0;
