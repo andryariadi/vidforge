@@ -68,9 +68,9 @@ const VideoCard = () => {
       {videoLists.length === 0 && <EmptyState />}
 
       {/* Video Lists */}
-      <div className="bg-rose-700 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-2 gap-y-6 place-items-center">
+      <div className="b-rose-700 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-2 gap-y-6 place-items-center">
         {videoLists.map((video) => (
-          <figure key={video.id} className="bg-violet-600 w-fit overflow-hidden" onClick={() => handleClickVideoDialog(video.id)}>
+          <figure key={video.id} className="b-violet-600 w-fit overflow-hidden" onClick={() => handleClickVideoDialog(video.id)}>
             <Thumbnail
               component={RemotionVideo}
               compositionWidth={compositionWidth} // Dynamic width

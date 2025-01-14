@@ -53,7 +53,7 @@ export const updateUserCredits = async ({ userEmail, userDetail }: { userEmail: 
       })
       .where(eq(Users?.email, userEmail));
 
-    revalidatePath("/");
+    // revalidatePath("/create-video");
 
     console.log({ res }, "<---diupdateUserCredits");
   } catch (error) {

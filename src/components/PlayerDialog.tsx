@@ -38,7 +38,7 @@ const PlayerDialog = ({ playVideo, videoId }: { playVideo: boolean; videoId: num
         <DialogHeader className="space-y-5">
           <DialogTitle className="text-2xl font-bold text-center">Your vidoe is ready to publish</DialogTitle>
 
-          <DialogDescription className="bg-violet-600 flex flex-col items-center gap-5 rounded-lg overflow-hidden">
+          <DialogDescription className="b-violet-600 flex flex-col items-center gap-5 rounded-lg overflow-hidden">
             <Player
               component={RemotionVideo}
               durationInFrames={Number(durationInFrame.toFixed(0))}
