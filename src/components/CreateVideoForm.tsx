@@ -243,8 +243,8 @@ const CreateVideoForm = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(handleSubmitForm)} className="grid grid-cols-1 md:grid-cols-2 gap-10">
-        <div className="relative space-y-3">
+      <form onSubmit={handleSubmit(handleSubmitForm)} className="-amber-600 grid grid-cols-1 md:grid-cols-2 gap-10 w-full">
+        <div className="b-sky-700 col-span-2 lg:col-span-1 relative space-y-3">
           <label htmlFor="topic" className="text-white-2 text-sm font-bold">
             Content
           </label>
@@ -270,7 +270,7 @@ const CreateVideoForm = () => {
           {errors.topic && topic === undefined && <p className="absolute -bottom-6 text-red-500 text-sm">{errors.topic.message as string}</p>}
         </div>
 
-        <div className="relative space-y-2">
+        <div className="b-sky-700 col-span-2 lg:col-span-1 relative space-y-2">
           <label htmlFor="duration" className="text-white-2 text-sm font-bold">
             Duration
           </label>
@@ -294,14 +294,14 @@ const CreateVideoForm = () => {
           {errors.duration && duration === undefined && <p className="absolute -bottom-6 text-red-500 text-sm">{errors.duration.message as string}</p>}
         </div>
 
-        <div className="relative space-y-2 col-span-2">
+        <div className="b-sky-700 col-span-2 relative space-y-2">
           <label htmlFor="theme" className="text-white-2 text-sm font-bold">
             Select a Video Theme
           </label>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
             {themeVideo.map((item) => (
               <figure key={item.name} className={`b-rose-700 relative space-y-1  overflow-hidden rounded-xl ${item.name === imageStyle && "border-[3.5px] border-orange-1"}`}>
-                <Image src={item.imgUrl} alt={item.name} width={174} height={174} className="object-cover h-fit 2xl:h-80 w-full rounded-xl hover:scale-125 transition-all duration-300" onClick={() => handleImageStyleChange(item.name)} />
+                <Image src={item.imgUrl} alt={item.name} width={174} height={174} className="object-cover h-fit md:h-80 w-full rounded-xl hover:scale-125 transition-all duration-300" onClick={() => handleImageStyleChange(item.name)} />
 
                 <figcaption className="bg-orange-1 absolute bottom-0 w-full h-7 flex items-center justify-center">
                   <p className="text-14 truncate font-normal capitalize text-white-1">{item.name}</p>

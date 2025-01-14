@@ -41,10 +41,10 @@ const Navbar = () => {
     <nav className="bg-transparent bg-opacity-90 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-black-6 px-10 min-h-[4.5rem] flex items-center justify-between">
       <Link href="/" className="b-sky-500 flex items-center gap-4">
         <Image src="/logo.svg" alt="logo" width={30} height={30} className="object-cover hover:scale-110 transition-all duration-300" />
-        <span className="font-bold text-2xl">VidForge</span>
+        <span className="font-bold text-lg md:text-2xl">VidForge</span>
       </Link>
 
-      <div className="b-green-700 flex items-center gap-5">
+      <div className="b-green-700 flex items-center gap-2 md:gap-5">
         {/* Credits */}
         {user && userDetail?.credits !== undefined && userDetail.credits >= 0 && (
           <div className="flex items-center gap-2">
@@ -55,7 +55,7 @@ const Navbar = () => {
 
         {user && <UserButton />}
 
-        {pathName !== "/dashboard" && <ButtonMotion title="Dashboard" link="/dashboard" />}
+        {pathName !== "/dashboard" && <ButtonMotion title="Dashboard" link="/dashboard" icon />}
       </div>
     </nav>
   );
