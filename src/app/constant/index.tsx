@@ -3,6 +3,25 @@ import { MdVideoLibrary } from "react-icons/md";
 import { BsFillPatchPlusFill } from "react-icons/bs";
 import { HiUser } from "react-icons/hi2";
 
+export const stepGenerateVideo = [
+  {
+    title: "Select Story Type",
+    desc: "Choose the type of story for your video. Select from various categories such as scary stroy, historical facts, fun facts, or motivational stories to give your video a unique vibe, or input your own custom prompt for a personalized story",
+  },
+  {
+    title: "Select Duration",
+    desc: "Set the video duration as per your needs. Choose the length of the video, from a few seconds to minutes, to fit the story you want to tell",
+  },
+  {
+    title: "Select Image Style",
+    desc: "Customize the visual style of your video. Pick from a range of styles such as realistic, cartoonish, gta, watercolor, or comic to create your desired aesthetic",
+  },
+  {
+    title: "Generate Video",
+    desc: "Click the generate button to process your video with AI. Your video will be automatically created based on the story, duration, and image style you selected",
+  },
+];
+
 export const sidebarLinks = [
   {
     icon: <TbLayoutDashboardFilled size={24} />,

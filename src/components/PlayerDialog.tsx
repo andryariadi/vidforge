@@ -9,10 +9,11 @@ import { motion } from "framer-motion";
 import { RiVideoUploadLine } from "react-icons/ri";
 import { getVideoData } from "@/lib/actions";
 import { VideoData } from "@/lib/types";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const PlayerDialog = ({ playVideo, videoId }: { playVideo: boolean; videoId: number }) => {
   const router = useRouter();
+  const pathName = usePathname();
 
   const [openDialog, setOpenDialog] = useState(false);
   const [videoData, setvideoData] = useState<VideoData[]>([]);
@@ -62,7 +63,7 @@ const PlayerDialog = ({ playVideo, videoId }: { playVideo: boolean; videoId: num
                 whileTap={{ scale: 0.95 }}
                 className="border-2 border-orange-1 button_bold-16 px-5 py-[10px] rounded-md"
               >
-                <span className="text-orange-1">Cancel</span>
+                <span className="text-orange-1">{pathName === "/dashboard" ? "Close" : "Dashboard"}</span>
               </motion.button>
 
               <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.95 }} className="bg-btn button_bold-16 px-5 py-[10px] rounded-md flex items-center gap-2">
