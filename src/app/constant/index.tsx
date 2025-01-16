@@ -68,14 +68,18 @@ export const topicVideo = [
   },
   {
     id: 6,
-    name: "Motivational",
+    name: "Romantic Story",
   },
   {
     id: 7,
-    name: "Fun Facts",
+    name: "Motivational",
   },
   {
     id: 8,
+    name: "Fun Facts",
+  },
+  {
+    id: 9,
     name: "Roman History",
   },
 ];
