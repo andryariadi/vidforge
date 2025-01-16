@@ -74,6 +74,10 @@ export const topicVideo = [
     id: 7,
     name: "Fun Facts",
   },
+  {
+    id: 8,
+    name: "Roman History",
+  },
 ];
 
 export const durationVideo = [

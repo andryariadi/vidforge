@@ -17,7 +17,7 @@ import CustomLoading from "./CustomLoading";
 import toast from "react-hot-toast";
 import { toastStyle } from "@/lib/utils";
 import { v4 as uuidv4 } from "uuid";
-import { VideoDataStore, VideoScriptData, User } from "@/lib/types";
+import { VideoDataStore, VideoScriptData } from "@/lib/types";
 import { VideoDataContext } from "./VidoeDataContext";
 import { db } from "@/db/config-db";
 import { useUser } from "@clerk/nextjs";
@@ -218,6 +218,7 @@ const CreateVideoForm = () => {
         const userEmail = user?.primaryEmailAddress?.emailAddress;
         await updateUserCredits({ userEmail, userDetail });
 
+        // if Revalidate Path is not working then use this
         setUser({ ...userDetail, credits: userDetail.credits - 10 });
       }
 
@@ -243,8 +244,8 @@ const CreateVideoForm = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(handleSubmitForm)} className="-amber-600 grid grid-cols-1 md:grid-cols-2 gap-10 w-full">
-        <div className="b-sky-700 col-span-2 lg:col-span-1 relative space-y-3">
+      <form onSubmit={handleSubmit(handleSubmitForm)} className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full">
+        <div className="col-span-2 lg:col-span-1 relative space-y-3">
           <label htmlFor="topic" className="text-white-2 text-sm font-bold">
             Content
           </label>
@@ -270,7 +271,7 @@ const CreateVideoForm = () => {
           {errors.topic && topic === undefined && <p className="absolute -bottom-6 text-red-500 text-sm">{errors.topic.message as string}</p>}
         </div>
 
-        <div className="b-sky-700 col-span-2 lg:col-span-1 relative space-y-2">
+        <div className="col-span-2 lg:col-span-1 relative space-y-2">
           <label htmlFor="duration" className="text-white-2 text-sm font-bold">
             Duration
           </label>
@@ -294,7 +295,7 @@ const CreateVideoForm = () => {
           {errors.duration && duration === undefined && <p className="absolute -bottom-6 text-red-500 text-sm">{errors.duration.message as string}</p>}
         </div>
 
-        <div className="b-sky-700 col-span-2 relative space-y-2">
+        <div className="col-span-2 relative space-y-2">
           <label htmlFor="theme" className="text-white-2 text-sm font-bold">
             Select a Video Theme
           </label>

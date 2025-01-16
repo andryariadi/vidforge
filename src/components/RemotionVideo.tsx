@@ -54,7 +54,7 @@ const RemotionVideo = ({ videoData, setDurationInFrame }: { videoData: VideoData
               }}
             />
 
-            <AbsoluteFill className="b-violet-500 flex items-center justify-center text-white-1 shadow-black-1">
+            <AbsoluteFill className="flex items-center justify-center text-white-1 shadow-black-1">
               <p className="text-lg font-semibold">{getCurrentCaptions()}</p>
             </AbsoluteFill>
           </Sequence>

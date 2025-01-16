@@ -3,9 +3,9 @@ import { stepGenerateVideo } from "../constant";
 
 export default function Home() {
   return (
-    <div className="b-amber-600 min-h-[calc(100vh-4.5rem)] px-10 py-10 space-y-20">
+    <div className="min-h-[calc(100vh-4.5rem)] px-10 py-10 space-y-20">
       {/* Title */}
-      <div className="b-rose-600 text-center space-y-3 text-gray-400">
+      <div className="text-center space-y-3 text-gray-400">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold">
           Build Your Short Video <span className="text-orange-1">With AI</span>
         </h1>
@@ -13,7 +13,7 @@ export default function Home() {
       </div>
 
       {/* Get Started */}
-      <div className="b-violet-600 flex items-center justify-center gap-5">
+      <div className="flex items-center justify-center gap-5">
         <ButtonMotion title="Get Started" link="/create-video" icon />
         <ButtonMotion title="Watch Video" link="/dashboard" icon />
       </div>
@@ -26,7 +26,7 @@ export default function Home() {
         </div>
 
         {/* Steps */}
-        <div className="b-sky-600 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 p-4 md:p-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 p-4 md:p-5">
           {stepGenerateVideo.map((step) => (
             <figure key={step.title} className="bg-black-1 rounded-lg border border-gray-600/50 shadow-lg p-5 text-center space-y-3 hover:border-orange-1 transition-all duration-300">
               <h2 className="text-base md:text-xl font-bold text-nowrap text-white-1/90">{step.title}</h2>

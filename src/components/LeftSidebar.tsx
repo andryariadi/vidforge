@@ -8,18 +8,16 @@ import { usePathname } from "next/navigation";
 const LeftSidebar = () => {
   const pathname = usePathname();
 
-  console.log(pathname, "<---dileftsidebar");
-
   return (
-    <section className="b-rose-700 w-full max-w-[10rem] lg:max-w-[12rem] xl:max-w-[18rem] left_sidebar">
-      <aside className="b-violet-700 xl:pl-3">
+    <section className="w-full max-w-[10rem] lg:max-w-[12rem] xl:max-w-[18rem] left_sidebar">
+      <aside className="xl:pl-3">
         {sidebarLinks.map((item) => {
           const isActive = pathname === item.route || pathname.startsWith(`${item.route}/`);
           return (
             <Link
               key={item.label}
               href={item.route}
-              className={cn("flex items-center gap-3 py-5 max-lg:px-4 justify-start", {
+              className={cn("flex items-center gap-3 py-5 max-lg:px-4 justify-start hover:text-orange-1 transition-all duration-300", {
                 "bg-nav-focus border-r-4 border-orange-1": isActive,
               })}
             >
