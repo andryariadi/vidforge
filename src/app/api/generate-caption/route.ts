@@ -19,7 +19,7 @@ export async function POST(req: Request) {
       process.exit(1);
     }
 
-    // console.log(transcript.text, "<---transcriptText");
+    console.log(transcript.text, "<---transcriptText");
     // console.log(transcript.words, "<---transcriptWords");
 
     for (const utterance of transcript.utterances!) {

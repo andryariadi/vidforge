@@ -33,7 +33,7 @@ export async function POST(req: Request) {
 
     // const downloadURL = await getDownloadURL(storageRef);
 
-    // console.log({ text, id, request, response, audioBuffer, downloadURL }, "<---digenerateAudio");
+    console.log({ text, id, request, response, audioBuffer, downloadURL }, "<---digenerateAudio");
 
     return NextResponse.json({ result: "success", downloadURL });
   } catch (error) {
