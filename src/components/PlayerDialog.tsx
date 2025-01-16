@@ -25,7 +25,6 @@ const PlayerDialog = ({ playVideo, videoId }: { playVideo: boolean; videoId: num
 
       if (videoId) {
         const res = await getVideoData(videoId);
-        console.log(res, "<---playerDialog");
 
         setvideoData(res?.videoData as VideoData[]);
       }

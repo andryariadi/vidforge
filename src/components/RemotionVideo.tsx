@@ -26,12 +26,8 @@ const RemotionVideo = ({ videoData, setDurationInFrame }: { videoData: VideoData
     const currentTime = (frame / 30) * 1000;
     const currentCaption = captions.find((word) => currentTime >= word.start && currentTime <= word.end);
 
-    console.log({ currentTime, currentCaption }, "<---getCurrentCaptions");
-
     return currentCaption ? currentCaption.text : "";
   };
-
-  console.log(videoData, "<---RemotionVideo");
 
   return (
     <AbsoluteFill className="bg-black-3">
