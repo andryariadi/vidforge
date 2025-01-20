@@ -5,6 +5,7 @@ import { Users } from "@/db/schema";
 import { useUser } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
 import { useEffect } from "react";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 const Provider = ({ children }: { children: React.ReactNode }) => {
   const { user } = useUser();
@@ -30,7 +31,11 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [user]);
 
-  return <>{children}</>;
+  return (
+    <>
+      <PayPalScriptProvider options={{ clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID as string }}>{children}</PayPalScriptProvider>
+    </>
+  );
 };
 
 export default Provider;

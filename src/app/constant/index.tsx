@@ -3,6 +3,29 @@ import { MdVideoLibrary } from "react-icons/md";
 import { BsFillPatchPlusFill } from "react-icons/bs";
 import { HiUser } from "react-icons/hi2";
 
+export const creditsOption = [
+  {
+    credits: 10,
+    amount: 0.99,
+  },
+  {
+    credits: 20,
+    amount: 1.99,
+  },
+  {
+    credits: 30,
+    amount: 3.99,
+  },
+  {
+    credits: 40,
+    amount: 6.99,
+  },
+  {
+    credits: 50,
+    amount: 9.99,
+  },
+];
+
 export const stepGenerateVideo = [
   {
     title: "Select Story Type",
@@ -35,7 +58,7 @@ export const sidebarLinks = [
   },
   {
     icon: <BsFillPatchPlusFill size={24} />,
-    route: "/upgrade",
+    route: "/upgrade-credits",
     label: "Upgrade",
   },
   {

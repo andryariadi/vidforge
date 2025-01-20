@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 
 import textToSpeech from "@google-cloud/text-to-speech";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { storage } from "@/lib/firebaseConfig";
+// import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+// import { storage } from "@/lib/firebaseConfig";
 import { uploadToFirebaseStorage } from "@/lib/uploadToFirebase";
 
 const client = new textToSpeech.TextToSpeechClient({
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   try {
     const { text, id } = await req.json();
 
-    const storageRef = ref(storage, `vidforage-audio/${id}.mp3`);
+    // const storageRef = ref(storage, `vidforage-audio/${id}.mp3`);
 
     const request = {
       input: { text: text },
