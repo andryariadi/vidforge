@@ -17,7 +17,7 @@ const RemotionVideo = ({ videoData, setDurationInFrame }: { videoData: VideoData
 
     setDurationInFrame(durationFrame);
 
-    console.log({ durationFrame }, "<---getDurationFrame");
+    // console.log({ durationFrame }, "<---getDurationFrame");
 
     return durationFrame;
   };

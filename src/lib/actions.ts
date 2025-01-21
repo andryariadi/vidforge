@@ -2,11 +2,11 @@
 
 import { db } from "@/db/config-db";
 import { VideoData, Users } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { User as UserDetail } from "./types";
 import { revalidatePath } from "next/cache";
 
-export const getVideoData = async (videoId: number) => {
+export const getVideo = async (videoId: number) => {
   try {
     const videoData = await db.select().from(VideoData).where(eq(VideoData.id, videoId));
 
@@ -18,7 +18,7 @@ export const getVideoData = async (videoId: number) => {
 
 export const getVideoLists = async (username: string) => {
   try {
-    const videoLists = await db.select().from(VideoData).where(eq(VideoData.createdBy, username));
+    const videoLists = await db.select().from(VideoData).where(eq(VideoData.createdBy, username)).orderBy(desc(VideoData.id));
 
     return { success: true, videoLists };
   } catch (error) {

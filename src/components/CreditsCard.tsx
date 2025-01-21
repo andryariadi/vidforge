@@ -5,6 +5,13 @@ import { PiCoinsFill } from "react-icons/pi";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { PayPalButtons } from "@paypal/react-paypal-js";
+import { useUserStore } from "@/lib/useUserStore";
+import { db } from "@/db/config-db";
+import { Users } from "@/db/schema";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { toastStyle } from "@/lib/utils";
+import { eq } from "drizzle-orm";
 
 type selectedOptionProps = {
   credits: number;
@@ -12,16 +19,43 @@ type selectedOptionProps = {
 };
 
 const CreditsCard = () => {
+  const router = useRouter();
+
   const [selectedOption, setselectedOption] = useState<selectedOptionProps | null>(creditsOption[2] || null);
 
   const [open, setOpen] = useState<boolean>(false);
+
+  const { user, setUser } = useUserStore();
 
   const handleSelectedOption = (credit: selectedOptionProps) => {
     setselectedOption(credit);
     setOpen(true);
   };
 
-  console.log({ selectedOption }, "<----creditsCard");
+  const handlePaymentSuccess = async () => {
+    console.log("Pembayaran berhasil...");
+
+    if (user && selectedOption) {
+      const res = await db
+        .update(Users)
+        .set({
+          credits: user?.credits + selectedOption?.credits,
+        })
+        .where(eq(Users.email, user.email))
+        .returning({ id: Users.id, credits: Users.credits });
+
+      if (res[0].id) {
+        setUser({
+          ...user,
+          credits: res[0].credits ?? user.credits,
+        });
+
+        toast.success("Payment success!", { style: toastStyle });
+
+        router.push("/dashboard");
+      }
+    }
+  };
 
   return (
     <div className="space-y-5">
@@ -60,6 +94,8 @@ const CreditsCard = () => {
       {open && (
         <PayPalButtons
           style={{ layout: "horizontal" }}
+          onApprove={() => handlePaymentSuccess()}
+          onCancel={() => console.log("Pembayaran dibatalkan...")}
           createOrder={(data, actions) => {
             return actions.order.create({
               purchase_units: [

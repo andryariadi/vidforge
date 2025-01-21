@@ -7,9 +7,9 @@ import RemotionVideo from "./RemotionVideo";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { RiVideoUploadLine } from "react-icons/ri";
-import { getVideoData } from "@/lib/actions";
 import { VideoData } from "@/lib/types";
 import { usePathname, useRouter } from "next/navigation";
+import { getVideo } from "@/lib/actions";
 
 const PlayerDialog = ({ playVideo, videoId }: { playVideo: boolean; videoId: number }) => {
   const router = useRouter();
@@ -24,7 +24,7 @@ const PlayerDialog = ({ playVideo, videoId }: { playVideo: boolean; videoId: num
       setOpenDialog(playVideo);
 
       if (videoId) {
-        const res = await getVideoData(videoId);
+        const res = await getVideo(videoId);
 
         setvideoData(res?.videoData as VideoData[]);
       }
